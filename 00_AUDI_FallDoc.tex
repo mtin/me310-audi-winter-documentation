@@ -1,0 +1,168 @@
+\documentclass[11pt,fleqn]{book} % Default font size and left-justified equations
+
+\usepackage[top=3cm,bottom=3cm,left=3.2cm,right=3.2cm,headsep=10pt,letterpaper]{geometry} % Page margins
+
+\usepackage{xcolor} % Required for specifying colors by name
+% The main color for the document --> Not really ocre.
+\definecolor{ocre}{RGB}{215,30,47} % Define the orange color used for highlighting throughout the book
+\definecolor{white}{RGB}{255,255,255} 
+
+% Font Settings
+\usepackage{avant} % Use the Avantgarde font for headings
+%\usepackage{times} % Use the Times font for headings
+\usepackage{mathptmx} % Use the Adobe Times Roman as the default text font together with math symbols from the Sym­bol, Chancery and Com­puter Modern fonts
+
+\raggedbottom
+
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+\usepackage[utf8]{inputenc} % Required for including letters with accents
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+
+% %More special packages to help deal with long requirements tables 
+% %that might span multiple pages.
+\usepackage{multirow} %deal with merged cells in tables
+\usepackage{supertabular}
+\usepackage{longtable}
+\usepackage{morefloats}
+
+\usepackage{url}  \urlstyle{same}     % deal with url strings in bibliography
+
+\usepackage{eurosym}
+\usepackage{csquotes}
+
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+
+% Bibliography
+\usepackage[style=numeric,sorting=nyt,sortcites=true,autopunct=true,autolang=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber]{biblatex}
+\addbibresource{me310reportfall.bib} % BibTeX bibliography file
+\defbibheading{bibempty}{}
+
+% \usepackage[pdftex,           %Hyperlink cross references, URLs, etc.
+%     pdfsubject={ME310 Documentation},
+%     colorlinks={true},
+%     linkcolor={black},
+%     citecolor={blue},
+%     bookmarksopenlevel=1,
+% ]{hyperref}
+
+\usepackage{me310}
+
+\input{commands}
+
+\usepackage{pdfpages}
+
+\usepackage{lettrine}
+
+\usepackage{listings} % for code listings
+
+\usepackage{minted} % for syntax highlighting
+
+\input{layout} % Insert the commands.tex file which contains the majority of the structure behind the template
+
+\begin{document}
+
+
+%%%%%%%%%% TITLE PAGE%%%%%%%%%%%%%%%%
+
+\thispagestyle{empty}
+\includepdf[pages={1}]{00_cover_page.pdf}
+
+%%%%%%%%%BEGIN ANY CUSTOM ABBREVIATIONS%%%%%%
+% Define any abbreviations that will apply throughout the document
+% to save typing. Examples:
+%\def\pmt{{\em Papier M\^{a}ch\`{e}}}  %Define "\pmt" to print "Papier Mache" with accents +1space
+%\def\cbike{{\em Casterbike} \,}  %Define "\cbike" to print "Casterbike " italicized +1space
+%%%%%%%%%END CUSTOM ABBREVIATIONS%%%%%%%%%
+
+%%%%%%%%COMMENTS%%%%%%%%%%%%%%%%
+%Allow comments ('remarks') to be shown or hidden.
+% Put optional text in \begin{remark} ... \end{remark}  environments.
+%The usage is a bit counterintuitive: \commentsoff makes them visible; \commentson hides them.
+%\commentson{remark} %Don't print remarks.
+%\commentsoff{remark}  %Do print remarks. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   BEGIN THE MAIN DOCUMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Load file "Executive.tex" for the Executive summary.
+% Remember, this is a stand-alone section for executives to read.
+\include{01_Executive}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+% TOC and LOF are automatically generated -- Note that you sometimes have to "compile" Latex THREE
+% times to update the main .aux files, the TOC etc. files, and finally the PDF output with all changes
+% propagated to the printout.
+\chaptermark{Contents}
+\fakechaptermark{CONTENTS}
+%\setcounter{tocdepth}{1}
+\tableofcontents*  %asterisk to prevent it from getting a number
+
+% Optional Lists of Figures and Tables:
+%\newpage
+\listoffigures*  %Note that for this you probably want to add the [short-headings] to captions.
+\listoftables*  %I decided to omit the LOT in this example.
+
+%Back to normal size for subsequent sections
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Set up the Glossary. The template is looking for a file called
+% "glossaryterms.tex" with glossary terms and definitions.
+\newpage
+\chapter*{Glossary}
+\fakechaptermark{GLOSSARY}
+\label{sec-glossary}
+\begin{description}
+\input{glossaryterms}   % input the list "glossaryterms.tex"
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% On to the main sections....  Just comment out the \input{} line
+%% for any chapters that aren't ready yet.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{02_Context}   %Your team, the corporate partner, the project background
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{03_Development}   %Results of benchmarking, need-finding, CFP, CEP etc.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{04_Requirements}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{05_Specification}  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{06_Planning}  %Current and future plans.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{07_Resources}  
+
+%%%%%BEGIN BIBLIOGRAPHY%%%%%%%%%
+% This is a two-step process in which you first create a ".bib" file, which is processed
+% by bibtex into a ".bbl" file for loading into the document. 
+% Many online journals and databases now have a feature to automatically download Bib
+% citations.  BibDesk is a handy (free) program for Macintosh for managing them.
+% EndNote and Refworks (is free to Stanford students) are good alternatives.
+%\bibliographystyle{plain}      %Modified slightly from plainurl.bst 
+% \bibliography{me310reportfall}  % Look for file called "me310report.bib"
+%\addcontentsline{toc}{chapter}{Bibliography}
+\printbibliography
+%
+% Alternatively, you can create your own bibliography list by hand.
+% In that case, comment out the last line above and replace with  \input{OurBibFile} 
+%%%%%END BIBLIOGRAPHY%%%%%%%%%
+
+%%%%%BEGIN APPENDIX SECTIONS%%%%%%%%%%%%%%%
+%\begin{appendices}
+%\appendix
+\chaptermark{Appendix}
+\fakechaptermark{APPENDIX}
+\include{99_Appendix}       % There could be multiple appendix files like this
+%\end{appendices}
+ %%%%%END APPENDIX SECTIONS%%%%%%%%%%%%%%%
+ 
+\end{document}
+

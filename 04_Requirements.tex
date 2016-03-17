@@ -1,0 +1,189 @@
+%MRC5Dec2102 Added Venture Requirements suggestion.
+%Design Requirements Chapter
+\chapterimage{ChapterImages/Requirements2}
+\chapter{Design Requirements}
+\label{sec-requirements}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{remark} \color{blue}
+% % \vspace{-0.3cm}
+% {\large What will be required for any solution that is consistent with your current vision and meets your user's needs?}
+
+% In 2013-14 we experimented with omitting Requirements for the Fall Documents. We concluded that it was a mistake -- even preliminary requirements are useful for coming to grips with the problem space.
+
+% Articulating design requirements is a critical task for a team that starts with a broad problem and needs to determine \emph{what to design}. After need-finding, and technical and user benchmarking, the team proposes a {\em class of design solutions} that will fulfill {\em requirements}\, associated with the problem. 
+% These requirements are among the first items of value that teams can deliver to sponsors.
+
+% As the design continues, requirements become more concrete and detailed. The direction of the project may change, leading to different kinds of requirements. Typically, new {\em de facto} \, requirements are discovered and documented. 
+% Ultimately, competing designs are evaluated with respect to the requirements. If you can't tell whether a design satisfies the requirements, the requirements are too vague!
+
+% In the fall, requirements will be preliminary. Still, it is worthwhile to articulate what you think will be needed, given what you've learned thus far. You might find that the 3-column format (e.g., Table \ref{tab:mediums1}) demands more precision than you have at this stage. 
+
+% The remainder of this section contains sample requirements (not an exhaustive set but enough to give an idea) from Autodesk Fall 2007-08 \cite{Autodesk2008Fall} and Audi Fall 2008-09 \cite{Audi2009Fall}.
+% \normalcolor \end{remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Introduction}
+
+For our system to serve as a desirable and useful connection between car and home, it should fulfill these high-level requirements:
+
+\begin{enumerate}
+\item Enhance the experience of arriving home from the car
+\item Enhance the experience of leaving home to the car
+\item Not add any complexity to a user's routine
+\end{enumerate}
+
+\noindent
+These requirements are further broken down and elaborated below. Our system AudiSeamless contains two main parts: 
+% {Jonathan} bowl less necessary compared with sensor
+%a bowl that serves as storage and 
+\begin{enumerate}
+    \item \textbf{AudiDefender} which is a sensor to detect the user's key fob
+    \item \textbf{AudiBits}, small displays showing the user what they forgot
+\end{enumerate}
+ \noindent The functional requirements for the system as a whole are outlined as well as separate physical requirements for AudiDefender and AudiBits.
+
+
+\section{Design Requirements for AudiSeamless}
+
+\subsection*{Functional Requirements}
+
+\textcolor{white}{text needed to format tables correctly}
+
+\begin{center}
+\tablefirsthead{%
+\hline
+\textbf{Requirements} & \textbf{Metric} & \textbf{Rationale} \\
+\hline}
+\tablehead{%
+\hline
+\multicolumn{3}{|l|}{\textit{\small{continued from previous page}}}\\
+\hline
+\textbf{Requirements} & \textbf{Metric} & \textbf{Rationale} \\
+\hline}
+\tabletail{%
+\hline
+\multicolumn{3}{|l|}{\textit{\small{continued on next page}}}\\
+\hline}
+\tablelasttail{\hline}
+\bottomcaption{Functional requirements for AudiSeamless}
+\begin{supertabular}{| p{32mm} | p{50mm} | p{53mm} | }
+		\hline Disarm home security system & Time to disarm is less than 5 seconds & Must take less time than existing method of entering code on keypad.\\
+		\hline Arm home security system & Time to arm is less than 1 second & Must be equal or less than existing method of pressing single button to arm. Will require separate signal than removing key fob, as user may not want to arm system.\\ 
+		\hline Automatic arming of system if user forgets. & System automatically arms system if nobody is home for 15 minutes and user does not arm upon departure. & Users may forget to arm system upon departure (will need second factor - button, etc.) \\ 
+		\hline  Detect Security fob at variable distances & Detect security fob within an adjustable range of up to 1 meter. & Users should have flexibility in detection of the key fob. They may want to keep the key fob in a purse or bag, and not explicitly take it out to place it in a particular place. The distance cannot be too large so as to broadcast the signal outside of the user's home, minimizing the risk of hacking into the system. A 1 meter radius would encompass the standard entryway table or shelf that one may store their bag in or keys on.\\ 
+        \hline Check status of home alarm system & Interfaces with existing home alarm system to check status of sensors every 0.5 seconds & Must keep apprised of changes in home security status. For the interval, everything below 1 second should be quick enough for a user to recognize the change as ``immediately'' \\
+        \hline Consume status of smart home devices & Interface with existing smart home ecosystems such as Wink or SmartThings to detect state of lights, media etc. Update status every 0.5 seconds & Users want a unified interface for their smart home instead of needing to pull out their smart phone app. Rationale for time same as above\\
+        \hline Remind user to bring important belongings. & System can detect presence of at least 10 tags that user can place on important items. & From testing, users liked the idea of reminders to bring things. Users also mentioned they would not want more than 10 AudiBits displays (1 display = 1 tag)\\
+        \hline \textbf{Jonathan: Do we need this? We did not agree on that feature so far with the team.} Connects with user's calendar to suggest items to bring & System interfaces with Google Calendar to suggest items to bring for specific days or trips. & We would want smart suggestions such as "I see you are going to Lake Tahoe this weekend, and your snow chains are not detected in your car. Would you like to bring them?" \\
+        \hline Car alert can be pushed to device. & Interfaces with car systems every 5 seconds to alert user of problems. & User need to know that car is okay at any given time, and if an intrusion is detected, be alerted of it promptly. Active checking may not be technically viable. \\
+        \hline Display car status & Display at least 4 main indications of status (away, urgent attention, suggested maintenance, and all okay) & Users expressed interest in making sure their car was okay while it was parked on the street.\\
+        \hline Display car driving range & Displays accurate range to within 1/8 of a tank. & Give users an idea of how much driving range they have, but exact mileage is not needed. Accuracy of driving range depends significantly on driving style, road conditions, weather, etc. 1/8 of a tank increments is a standard breakdown of a tank's level in the US.\\
+        \hline Alert user of car intrusion & User is alerted of car break-in within 5 seconds of it happening to alert authorities. & We want the user to know immediately if something is wrong with their car so they have the best chance of catching the intruder.\\
+        \hline Alert user of maintenance issues & Maintenance signals sent to system every time car is turned on and off. & User should be reminded of maintenance issues when they have the ability to address them (i.e. schedule a time to go to the mechanic or set aside time to look at issue themselves on calendar).\\
+        \hline Send indication to car that user is leaving upon departure. & Signal is sent to car within 5 seconds of home system arming or indication given. & Sending signal to car can warm up interior, boot navigation, and connect car to internet before user enters car, based on what the user desires.\\
+        \hline Programmable to work with any Audi car or multiple cars. & System interfaces with at least 2 Audi vehicles and can be reprogrammed easily. & Our users may have more than 1 vehicle, and whereas we are not as concerned with interfacing with other brands (we'd like to encourage brand loyalty) \\
+        \hline Recharge key fob battery & Recharge existing key fob battery equivalent (CR2032 - 210 mAh, 3V) in under 8 hours & This is the model, capacity, and voltage of existing Audi key fobs, and whereas we could not directly recharge this one, we could install an equivalent battery that could fully recharge overnight.\\
+        \hline Resilient to hacking & System cannot be hacked by brute force attack (guessing of wireless security codes) in less than 12 hours. & Security is a common concern with smart home technology, and ours should be secure enough to deter potential intruders that hacking into system isn't worth it.\\
+\end{supertabular}
+\end{center}
+
+\textcolor{white}{text needed to format tables correctly}
+
+\subsection*{Physical Requirements}
+
+\begin{center}
+\tablefirsthead{%
+\hline
+\textbf{Requirements} & \textbf{Metric} & \textbf{Rationale} \\
+\hline}
+\tablehead{%
+\hline
+\multicolumn{3}{|l|}{\textit{\small{continued from previous page}}}\\
+\hline
+\textbf{Requirements} & \textbf{Metric} & \textbf{Rationale} \\
+\hline}
+\tabletail{%
+\hline
+\multicolumn{3}{|l|}{\textit{\small{continued on next page}}}\\
+\hline}
+\tablelasttail{\hline}
+\bottomcaption{Physical requirements for the AudiSeamless Bowl/Sensor}
+\begin{supertabular}{| p{32mm} | p{50mm} | p{53mm} | }
+		\hline System stores Audi key fob and standard set of keys & Storage area of system is at least 750 cm3 & If users choose to store keys in system, it should be able to fit any standard set of keys including the key fob as well as any other house, storage, work, or miscellaneous keys the user chooses to store.\\
+		\hline System is portable. & Weight less than 15 kg & Urban users are more likely to move apartments, so the system should be easily movable from one apartment to the next.\\
+		\hline System fits on standard entryway table & Footprint of less than 0.2 m2 & System should be easily placed on a table near the user's front door. \\
+		\hline System is durable and robust & Must function for at least 4 years and cannot be significantly altered by an average man or woman applying a full impact force on structural elements of the system & Since Audi is known for reliable and well manufactured cars, any final solution should be in line with this and should be resistant to daily use by an average human and vandalism. The average car lease is 3-4 years, so it should at least last as long as the first owner will likely own the car.\\
+		\hline Solution should be safe for children to be around. & There should be no pinch points, sharp points, etc.& Many potential users have children, and we would not want to endanger them.\\
+		\hline System should be aesthetically pleasing & At least 80\% of surveyed users should react positively to the device forms & A pleasing system will encourage adoption and use and is in line with the characteristics of the Audi brand.\\
+		\hline Subtly incorporate the Audi logo into the design. & Logo is at least 1 x 4 cm visible when walking by the system. & We want to bring the Audi brand into the home so that users can show others their love for the car.\\
+\end{supertabular}
+\end{center}
+
+\begin{center}
+\tablefirsthead{%
+\hline
+\textbf{Requirements} & \textbf{Metric} & \textbf{Rationale} \\
+\hline}
+\tablehead{%
+\hline
+\multicolumn{3}{|l|}{\textit{\small{continued from previous page}}}\\
+\hline
+\textbf{Requirements} & \textbf{Metric} & \textbf{Rationale} \\
+\hline}
+\tabletail{%
+\hline
+\multicolumn{3}{|l|}{\textit{\small{continued on next page}}}\\
+\hline}
+\tablelasttail{\hline}
+\bottomcaption{Physical requirements for the AudiSeamless Modular Display}
+\begin{supertabular}{| p{32mm} | p{50mm} | p{53mm} | }
+		\hline Battery lifetime has to be sufficiently long. & Must last at least 1 week without need for recharging. & We do not want users to need to constantly recharge their screens.\\
+		\hline One AudiBit can be setup via a smart phone app. & An inexperienced user must be able to set up system within 20 minutes. & We want our system to be accessible to a wide range of users.\\
+		\hline One AudiBit has to be easily attachable and dettachable to most surfaces within the house (such as walls or the fridge) & Removable adhesive (such as Command Strips) must support at last 500 g of weight. & We cannot have the screen fall off the walls.\\
+		\hline One AudiBit has to be sufficiently big enough to display easily visible icons &  Icon must be at least $16 cm^2$ & Visible from at least 2 m away. Exact size estimated from testing.\\
+\end{supertabular}
+\end{center}
+
+\subsection*{Constraints}
+\begin{itemize}
+
+	\item The bandwidth required must not be prohibitive to standard engineering offices. 
+	\item The solution has to be consistent with the look, feel, and use of Audi branded products (cf. section 2.3.1.2) 
+	\item Users need to feel like they are in control of the system at all times. Few users are very interested in systems acting to anticipate their needs.
+	\item Must be able to adapt to the flexible schedule of the user. 
+	\item The signals for the security system disarming cannot reach outside of the user's home or apartment, minimizing the risk of burglars capturing signals and disabling the system on command.
+	\item If the body of the key fob itself changes, it must fit in the average user's pocket or purse.
+	\item Any connection with the car will be powered by the car's internal battery, which will not handle significant sustained power draws. 
+\end{itemize}
+
+\subsection*{Opportunities}
+\begin{itemize}
+
+    \item Be the first one to offer the "Killer-App" for smart homes that does not seem to exist yet even though people are generally interested in the smart home. 
+	\item Design a device that would pay for itself through reduced home or car insurance premiums, improving business case for adoption.
+	\item Simplify an automated smart home setup and use through implicit action of walking into the home and depositing the key fob.
+	\item Use the same protocol as the smart key system to minimize the need for additional hardware (though we will not be able to easily get access to this for the purposes of the project, so we will emulate the protocol with a similar system).
+	\item Smart keys are systems that Audi owners are familiar with and could easily learn to use at home.
+	\item As key fobs become more "smart" and as users generally do not place them into car to charge, the power consumption increases, and therefore battery life decreases. There is an opportunity to eliminate the need for users to replace the batteries themselves. 
+	\item Several users have not expressed compelling need for an AudiConnect subscription features, but perhaps our system could increase the subscription level of 
+	\item Perhaps the screen could be cut into tile work in kitchen or walls so that power could be supplied continuously and it would literally have stronger integration with the house.
+	
+\end{itemize}
+
+\subsection*{Assumptions} 
+\begin{itemize}
+
+    \item Users keep key fob in the same place when they get home.
+	\item Users own home security systems of some sort.
+	\item Audi owners will own and be comfortable with the basic functionality of smart phones. 
+	\item Cell coverage in use area is strong enough to add nearly constant connectivity between car 
+and internet/home with at least 3G speed.
+	\item Users own and know how to set up and use smart home devices 
+	\item People see a benefit in automating things in their home 
+	\item Users have AudiConnect credentials, which allow them to interface with the internet and car remotely at the moment.
+
+\end{itemize}
+
+
+ 

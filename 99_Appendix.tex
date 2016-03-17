@@ -1,0 +1,29 @@
+% Appendices are set up same as chapter sections
+\chapter*{Appendix}
+\addcontentsline{toc}{chapter}{Appendix}
+
+\setcounter{section}{0}
+
+\renewcommand\thesection{\Alph{section}}
+
+\vspace{1em}
+\hiddensection{Original Project Prompt}
+
+\begin{figure}[h]
+   \centering
+     \includegraphics[width=0.9\textwidth]{Figures/Appendix/project_prompt}
+   \caption{Original Project prompt}
+   \label{fig:projectprompt}
+\end{figure}
+
+\hiddensection{Benchmarking}
+\label{sec:benchmarkingAppendix}
+\input{Appendix/Benchmarking}
+
+\hiddensection{Previous Prototypes}
+\label{sec:PreviousPrototypes}
+\input{Appendix/PreviousPrototypes}
+
+\hiddensection{Code}
+\label{sec:app_code}
+\input{Appendix/Code}

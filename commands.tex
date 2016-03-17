@@ -1,0 +1,32 @@
+\newcommand{\interviewCitation}[3]{
+\begingroup
+\vspace{1.2\baselineskip}
+\parbox{14.5cm}{\setlength\topsep{0pt}
+	\leftskip2em
+    \textit{"#1"}\\
+    \textit{"#2"}
+    \vspace{.5\baselineskip}
+    \begin{flushright}
+         - \small #3
+    \end{flushright}            
+}
+\vspace{1.0\baselineskip}
+\endgroup
+}
+
+\newcommand{\fakechaptermark}[1]{\markboth{\normalsize\ #1}{}}
+
+\newcommand{\hiddensection}[1]{
+    \stepcounter{section}
+    \subsection*{\textcolor{ocre}{\Alph{section}}\hspace{1em}{#1}}
+}
+
+\newcommand{\hiddensubsection}[1]{
+    \stepcounter{subsection}
+    \subsection*{\hspace{-2.5em}\textcolor{ocre}{\Alph{section}.\arabic{subsection}}\hspace{1em}{#1}}
+}
+
+\newcommand{\hiddensubsubsection}[1]{
+    \stepcounter{subsubsection}
+    \subsection*{\hspace{-3.4em}\textcolor{ocre}{\Alph{section}.\arabic{subsection}.\arabic{subsubsection}}\hspace{1em}{#1}}
+}

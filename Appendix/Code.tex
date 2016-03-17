@@ -1,0 +1,187 @@
+\hiddensubsection{globals.py}
+\begin{minted}{python}
+#!/usr/bin/env python
+
+def init():
+	global ArmKeyPressed
+	global ArmPin
+	global SirenGPIOPin
+	global StatusLED
+	global modechange
+        global timechange
+        global maincount
+        global param
+        global mode
+        global door1
+        global window1, window2, light1
+
+        maincount = 0
+	modechange = 1
+	ArmPin = 35
+	SirenGPIOPin = 36
+	StatusLED = 37
+
+        mode = "Armed"
+        door1 = 0
+        window1 = 1
+        window2 = 1
+        light1 = 1
+\end{minted}
+        
+\hiddensubsection{alarm.py}
+\begin{minted}{python}
+import RPi.GPIO as GPIO
+import time
+import serial
+import globals
+from flask import Flask, request, render_template
+from multiprocessing import Process, Pipe, Queue, current_process
+import subprocess
+
+global parent_conn
+
+app = Flask(__name__)
+
+@app.route("/", methods=['Get', 'POST'])
+def index():
+	if request.method == 'POST': # Security System Sensor Input from a virtual website
+		if request.form['mode_btn'] == 'ARM':
+			globals.mode = "Armed"
+			print "why is that not working"
+		elif request.form['mode_btn'] == 'DisARM':
+			globals.mode = "DisArmed"
+			print "should DisArmed"
+		elif request.form['mode_btn'] == 'Leaving':
+			globals.mode = "Leaving"
+		elif request.form['mode_btn'] == 'door1_open':
+			globals.door1 = 0
+		elif request.form['mode_btn'] == 'door1_closed':	
+			globals.door1 = 1
+		elif request.form['mode_btn'] == 'window1_open':
+			globals.window1 = 0
+		elif request.form['mode_btn'] == 'window1_closed':	
+			globals.window1 = 1
+		elif request.form['mode_btn'] == 'window2_open':
+			globals.window2 = 0
+		elif request.form['mode_btn'] == 'window2_closed':	
+			globals.window2 = 1
+		elif request.form['mode_btn'] == 'light1_on':
+			globals.light1 = 0
+		elif request.form['mode_btn'] == 'light1_off':
+			globals.light1 = 1
+		globals.modechange = 1
+	return render_template('index.html')
+
+
+def Checkinput():	
+	if RFID.readable:
+		serstr = RFID.readline()
+		idstr = serstr[-6:-2]
+		if idstr == 'B178':
+			globals.mode = "DisArmed"
+			globals.modechange = 1
+	
+	if blueT.readable and not globals.mode == "Guard" and not globals.mode == "ALARM":
+		senstr = blueT.readline()
+		if senstr == 'LEAVING#':
+			globals.mode = "Leaving"
+			globals.modechange = 1			
+
+def update_mode():	
+	print "Running update"										#update basic LED
+	globals.timechange = time.time()
+	globals.modechange = 0
+	if globals.mode == "Armed":
+		blueT.write('H3#')
+		GPIO.output(37, True)
+	elif globals.mode == "DisArmed":
+		blueT.write('H0#')
+		blueT.write('ALERTOFF#')
+		GPIO.output(37, False)
+	elif globals.mode == "ALARM":
+		blueT.write('H1UNKNOWN#')	
+		blueT.write('ALERT#')
+		print "ALERT!!!!"
+
+def IsAllLock():
+	return globals.door1 and globals.window1 and globals.window2
+
+def mainControl(conn):
+	globals.init()
+	global RFID
+	global blueT
+	GPIO.setmode(GPIO.BOARD)
+	GPIO.setup(globals.SirenGPIOPin, GPIO.OUT)
+	GPIO.output(globals.SirenGPIOPin,True)
+	GPIO.setup(globals.ArmPin, GPIO.IN) 		#Arm pin setup
+	GPIO.setup(globals.StatusLED, GPIO.OUT) 		#Arm pin setup
+	GPIO.output(globals.StatusLED, True)
+	RFID = serial.Serial('/dev/ttyUSB0', baudrate=9600, bytesize = 8, parity = 'N', stopbits = 1, timeout = 0.05)
+	blueT = serial.Serial( '/dev/ttyAMA0', baudrate = 9600, parity='N', stopbits= 1, bytesize=8, timeout=0.05)
+
+	# p = current_process()
+	# print 'Starting:', p.name, p.pid
+	while (True):
+
+		globals.maincount+= 1
+		globals.maincount = globals.maincount % 2
+		if globals.maincount == 1:
+			print "in mainloop %s" %str(globals.mode)		
+
+		if globals.modechange:
+			update_mode()
+
+		if globals.mode =="Leaving":
+			if not IsAllLock():	
+				print "red"	
+				Msg = "Door1 is not closed"
+				blueT.write('H1%s#' %(Msg))		
+			elif not globals.light1:
+				print "yellow"
+				Msg = "System is taking care of your home"
+				blueT.write('H2%s#' %(Msg))
+				if time.time() - globals.timechange > 5:
+					globals.light1 = 1
+			else:
+				blueT.write('H3#')
+				if time.time() - globals.timechange > 5:
+					globals.mode = "Armed"
+					globals.modechange = 1
+
+		if globals.mode == "Armed":
+			if not IsAllLock():
+				globals.mode = "Guard"
+				globals.modechange = 1
+		if globals.mode == "Guard":
+			lapse = time.time() - globals.timechange
+			if lapse*10%10 < 5:
+				blueT.write('H3#')
+			elif lapse*10%10 > 5:
+				blueT.write('H0#')
+			if lapse > 10:
+				globals.mode = "ALARM"
+				globals.modechange = 1
+
+		if globals.mode == "ALARM":
+			lapse = time.time() - globals.timechange
+			if lapse < 0.5:
+				blueT.write('H1UNKNOWN#')
+			elif lapse < 1.0:
+				blueT.write('H0#')
+			else:
+				globals.timechange = time.time()
+
+		Checkinput()
+		time.sleep(0.2)		
+
+
+
+if __name__ == '__main__':
+
+	parent_conn, child_conn = Pipe()
+	p = Process(name = "mainControl", target=mainControl, args=(child_conn, ))
+	p.daemon = True
+	p.start()
+	# parent_conn.send(param)
+	app.run(host='0.0.0.0', debug=False)
+\end{minted}
